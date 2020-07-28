@@ -23,8 +23,8 @@ d3.json('/api/suicides_and_gdp').then(function(data){
     var data = [trace1];
     
     var layout = {
-        width: 450,
-        height: 450,
+        width: 600,
+        height: 600,
         xaxis: {
             title: 'gdp per capita'
         },

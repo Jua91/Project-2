@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" 
-  integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-  <!-- local CSS -->
-  <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-  <title>Suicide rates analysis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+    crossorigin=""/>
+    <!-- Leaflet JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+    crossorigin=""/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" 
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- local CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <title>Suicide rates analysis</title>
  
 </head>
 <body>
@@ -51,7 +59,7 @@
             <div class="row">
               <div class="col-3">
                 <a href ="gender">
-                  <img src="{{ url_for('static', filename='images/suicides_by_gender.png') }}" alt="cable img" class="img-fluid" style="border: 2px solid #2E86C1;">
+                  <img src="{{ url_for('static', filename='images/suicides_by_gender.png') }}" alt="cable img" class="img-fluid">
                 </a>
               </div>
               <div class="col-3">
@@ -107,36 +115,9 @@
   <div class="container">
     <h3> Visualizations </h3>
     <hr>
-    <div class="row">
-      <div class="col-7" id="figure1">
-        
-        <form class="form-inline">
-          <div class="form-group mx-sm-3 mb-2">
-            <label for="selectYear" class="sr-only">Select Year</label>
-            <input type="text" class="form-control" id="inputYear" placeholder="1985">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Select</button>
-        </form>
-
-        <div id="pie_gender"></div>
-      </div>
-      <div class="col-5">
-        <p class = "analysis">
-          Suicide is more common in men than women. Suicides in men are four times higher than in women. 
-          <br><br>The difference can be seen in the bar chart as well. The gap was small in the first four years, but the gap grew and remained stable after that. 
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div id="line_gender"></div>
-      </div>
-    </div>
+    <div id="map"></div>
   </div>
   
-
-  
-  <!-- <script src="static/d3.js"></script> -->
   <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" 
@@ -145,10 +126,16 @@
   integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" 
   integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  
+  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+    integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+    crossorigin=""></script>
   <!-- D3.js CDN -->
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <!--Plotly JS-->
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="../static/js/gender_d3.js"></script>
+  <script type="text/javascript" src="../static/js/choropleth.js"></script>
+  <!-- API key -->
+  <script type="text/javascript" src="../static/js/config.js"></script>
+  <!-- map.js -->
+  <script src="../static/js/map.js"></script>
 </body>
 </html>

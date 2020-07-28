@@ -63,27 +63,45 @@ d3.json('/api/suicides_and_gdp').then(function(data){
     Plotly.newPlot('scatter_gdp', data, layout, config);
 });
 
-
-
-d3.json("/api/suicides_by_country").then(function(data){
+ // Suicides by Country
+ d3.json('/api/suicides_by_TopTenCountry').then(function(data){
     
-    var data = [{
-            x: Object.keys(data),
-            y: Object.values(data),
-            type: 'bar'
-        }];
-
+    // Sort the objects in ascending order
+    let sortedlist = Object.entries(data).sort((a, b) => a[1] - b[1]);
+    console.log(sortedlist)
+  
+    var keys = []
+    var values = []
+  
+    sortedlist.forEach(country=>{
+      keys.push(country[0]);
+      values.push(country[1])
+    })
+    
+    var data = [
+      {
+        type: 'bar',
+        x: values,
+        y: keys,
+        orientation: "h"
+      },
+    ];
     var layout = {
+        title: "Countries with the highest suicide rates",
+        autosize: false,
         width: 450,
         height: 450,
-        title:'Suicides by Country'
+        margin: {
+          l: 150,
+          r: 50,
+          b: 50,
+          t: 50,
+          pad: 4
+        }
     }
     var config = {responsive: true}
-
-    Plotly.newPlot('bar_by_country', data, config);
-})
-
-
+    Plotly.newPlot('bar_by_country', data, layout, config);
+  });
 
 d3.json('/api/suicides_per_100k_by_year').then(function (data) {
     var gd = document.getElementById('lineDiv');
@@ -94,15 +112,12 @@ d3.json('/api/suicides_per_100k_by_year').then(function (data) {
     }]
     
     var layout = {
+        margin: {l: 150}, 
         width: 450, 
         height: 450,
-        title: "Average number of suicides per 100K <br>(from 1997 to 2014)",
-        xaxis: {
-            title: 'year'
-        },
-        yaxis: {
-            title: 'suicides per 100k'
-        },
+        title: "Average number of suicides per 100K population<br> from 1997 to 2014",
+        xaxis: { title: "Year" },
+        yaxis: { title: "Avg number of suicides per year"}
     }
     var config = {responsive: true}
 
@@ -110,20 +125,32 @@ d3.json('/api/suicides_per_100k_by_year').then(function (data) {
 });
 
 
-
 // Suicides by Age
 d3.json('/api/suicides_by_age').then(function(data){
-    // console.log(data);
-    var ageLabels = Object.keys(data)
-    var ageValues = Object.values(data)
-    // console.log(ageLabels,ageValues);
+    var bubbleLabels = Object.keys(data)
+    var bubbleValues = Object.values(data)
     var trace1 = {
-      type: "scatter",
-      mode: "markers",
-      x: ageLabels,
-      y: ageValues
+      x: bubbleLabels,
+      y: bubbleValues,
+      mode: 'markers',
+      marker: {
+        size: [40, 50, 60, 30, 55, 35],
+        color: bubbleValues,
+        colorscale: [
+              ['0.0', 'rgb(165,0,38)'],
+              ['0.111111111111', 'rgb(215,48,39)'],
+              ['0.222222222222', 'rgb(244,109,67)'],
+              ['0.333333333333', 'rgb(253,174,97)'],
+              ['0.444444444444', 'rgb(254,224,144)'],
+              ['0.555555555556', 'rgb(224,243,248)'],
+              ['0.666666666667', 'rgb(171,217,233)'],
+              ['0.777777777778', 'rgb(116,173,209)'],
+              ['0.888888888889', 'rgb(69,117,180)'],
+              ['1.0', 'rgb(49,54,149)']
+            ],
+      }  
     }
-    
+    var data = [trace1];
     var layout = {
         width: 450,
         height: 450,
@@ -137,9 +164,8 @@ d3.json('/api/suicides_by_age').then(function(data){
     }
     var config = {responsive: true}
 
-    Plotly.newPlot("scatter_age", [trace1], layout, config);
-  });
-
+    Plotly.newPlot("bubble_age", data, layout, config);
+});
 
 d3.json('/api/suicides_and_hdi').then(function(data){
     // console.log(data)
@@ -168,12 +194,12 @@ d3.json('/api/suicides_and_hdi').then(function(data){
       
     var layout = {
         width: 450,
-        height: 350,
+        height: 450,
         xaxis: {
             title: 'Human Development Index'
         },
         yaxis: {
-            title: 'Suicides'
+            title: 'Suicides Per 100k'
         },
         title: 'Suicides vs HDI'
     }
@@ -182,3 +208,25 @@ d3.json('/api/suicides_and_hdi').then(function(data){
 
     Plotly.newPlot("scatter_hdi", [trace1], layout, config);
 })
+
+$.ajax({
+    dataType: "json",
+    url: '/api/suicides_by_generation',
+    data: {},
+    success: function(data){
+      console.log(data);
+      var labels = Object.keys(data)
+      var values = Object.values(data)
+      var trace = {
+          type: 'pie',
+          labels: labels,
+          values: values
+      }   
+      var layout = {
+          title:'Suicide Rates by Generation'
+      }
+      Plotly.newPlot('pie_generation', [trace], layout);
+    }
+});
+
+ 

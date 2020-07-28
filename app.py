@@ -30,6 +30,26 @@ def gender():
     #"""Return the homepage."""
     return render_template("gender.html")
 
+@app.route("/generation")
+def generation():
+    #"""Return the homepage."""
+    return render_template("generation.html")
+
+@app.route("/byCountry")
+def byCountry():
+    #"""Return the homepage."""
+    return render_template("byCountry.html")
+
+@app.route("/yearlyRates")
+def yearlyRates():
+    #"""Return the homepage."""
+    return render_template("yearlyRates.html")
+
+@app.route("/byAge")
+def byAge():
+    #"""Return the homepage."""
+    return render_template("byAge.html")
+
 @app.route("/gdp_scatter")
 def gdp_scatter():
     #"""Return the homepage."""
@@ -40,8 +60,27 @@ def hdi_scatter():
     #"""Return the homepage."""
     return render_template("hdi_scatter.html")
 
+@app.route("/map")
+def map():
+    #"""Return the homepage."""
+    return render_template("map.html")
+
 @app.route("/api/suicides_by_country")
 def suicides_by_country():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    # results = session.query(Suicide.country).all()
+    results = engine.execute("SELECT country, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY country ORDER BY suicides DESC")
+    
+    output = {}
+    for result in results:
+        output[result['country']] = int(result['suicides'])
+    session.close()
+    return jsonify(output)
+
+@app.route("/api/suicides_by_TopTenCountry")
+def suicides_by_TopTenCountry():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
@@ -86,7 +125,9 @@ def yearly_suicides_by_gender():
     session.close()
 
     yearly_results = {}
+    # Sort the results by year
     sorted_output = sorted(output, key=itemgetter('year'))
+    # Assigning the objects into the same list for the same year data
     for key, group in itertools.groupby(sorted_output, key=lambda x:x['year']):
         yearly_results[key] = list(group)
     return jsonify(yearly_results)
@@ -120,6 +161,31 @@ def suicides_by_age():
     session.close()
     return jsonify(output)
 
+@app.route("/api/yearly_suicides_by_age")
+def yearly_suicides_by_age():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    # results = session.query(Suicide.country).all()
+    results = engine.execute("SELECT year, age, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY year,age;")
+    
+    output = []
+    for result in results:
+        output.append({
+            'year': result['year'],
+            'age': result['age'],
+            'suicides': int(result['suicides'])
+        })
+    session.close()
+
+    yearly_results = {}
+    # Sort the results by year
+    sorted_output = sorted(output, key=itemgetter('year'))
+    # Assigning the objects into the same list for the same year data
+    for key, group in itertools.groupby(sorted_output, key=lambda x:x['year']):
+        yearly_results[key] = list(group)
+    return jsonify(yearly_results)
+
 @app.route("/api/suicides_and_gdp")
 def suicides_and_gdp():
     # Create our session (link) from Python to the DB
@@ -143,7 +209,7 @@ def yearly_suicides_and_gdp():
     session = Session(engine)
 
     # results = session.query(Suicide.country).all()
-    results = engine.execute("SELECT year, AVG(derivedTable.suicidesper100pop) AS suicide_rates, AVG(derivedTable.gdp_per_capita) AS gdp_per_capita FROM (SELECT country,year,SUM(suicidesper100pop) AS suicidesper100pop,MAX(gdp_per_capita) AS gdp_per_capita FROM suicidedata WHERE hdi_for_year <>0 GROUP BY country,year) AS derivedTable GROUP BY year;")
+    results = engine.execute("SELECT year, AVG(derivedTable.suicidesper100pop) AS suicide_rates, AVG(derivedTable.gdp_per_capita) AS gdp_per_capita FROM (SELECT country,year,SUM(suicidesper100pop) AS suicidesper100pop,MAX(gdp_per_capita) AS gdp_per_capita FROM suicidedata GROUP BY country,year) AS derivedTable GROUP BY year;")
     
     output = {}
     for result in results:
@@ -173,7 +239,7 @@ def suicides_and_hdi():
     # Create our session (link) from Python to the DB
     session = Session(engine)
     # results = session.query(Suicide.country).all()
-    results = engine.execute("SELECT country,SUM(suicides_no) AS suicides, MAX(hdi_for_year) AS hdi FROM suicidedata WHERE hdi_for_year <>0 GROUP BY country,year;")
+    results = engine.execute("SELECT country, AVG(derivedtable.suicide_rates) AS suicides, AVG(derivedTable.hdi) AS hdi FROM (SELECT year, country, SUM(suicidesper100pop) AS suicide_rates, MAX(hdi_for_year) AS hdi FROM suicidedata WHERE hdi_for_year <>0 GROUP BY year, country ORDER BY year) AS derivedTable GROUP BY country ;")
     
     output = {}
     for result in results:

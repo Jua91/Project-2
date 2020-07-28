@@ -20,57 +20,63 @@ body {
     display: block;
 } 
 
-/* box in index.html */
+/* main container to store the visualizations and explanation */
 .container {
     background-color: white;
     padding: 20px ;
-    margin: 30px 85px 50px 85px;
-    /*margin-top: 30px;
-    margin-bottom: 50px;*/
+    margin-top: 30px;
+    margin-bottom: 50px;
     display: block;
 } 
 
-.bottom-container {
+/* top container to store the 7 visualization from which use can choose */
+.top-container {
     background-color: white;
+    height: 250px;
     padding: 10px ;
-    margin: 20px 10px 10px 10px;
     position: initial;
     bottom: 30px;
     display: block
 }
 
+.top-container .row {
+    margin-left: 50px;
+    margin-right:50px;
+}
+
+/* Analysis on the visualization */
+.analysis {
+    margin-top: 7rem;
+    margin-bottom: 1rem;
+    margin-left: 4rem;
+    align-self: center;
+}
+/* Images of the charts in the top-container */
 img {
     width: 200px;
     max-height:300px;
     align-items: center;
 }
-
-
 img.img-fluid:hover {
     border: 1px dotted blue;
 }
 
-.wrapper {
-    position: relative;
-    height: 550px;
-    padding: 20px;
-    margin: 30px 40px 30px 40px;
-    background: lightslategray;
-    /* background-image: url("../images/nasa.jpg"); */
-    background-attachment: fixed;
-    background-position: bottom center;
-    background-size: cover;
-  }
-  
-.wrapper h1 {
-margin-top: 200px;
-font-size: 1rem;
-animation: title 1.2s forwards linear;
+/* Height setting for the map*/
+#map { height: 600px; }
+
+/* Legend setting for the map*/
+.legend {  
+    text: "Suicide Count";
+    padding: 10px; 
+    line-height: 18px; 
+    color: #555; 
+    background-color: #fff; 
+    border-radius: 5px;
 }
-  
-.wrapper p {
-font-size: 4rem;
-opacity: 0;
-animation: subtitle 1.2s forwards linear;
-animation-delay: 1.2s;
+.legend i { 
+    float: left;
+    width: 10px; 
+    height: 10px;
+    margin-right: 8px; 
+    opacity: 0.7;
 }

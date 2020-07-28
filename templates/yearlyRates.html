@@ -51,7 +51,7 @@
             <div class="row">
               <div class="col-3">
                 <a href ="gender">
-                  <img src="{{ url_for('static', filename='images/suicides_by_gender.png') }}" alt="cable img" class="img-fluid" style="border: 2px solid #2E86C1;">
+                  <img src="{{ url_for('static', filename='images/suicides_by_gender.png') }}" alt="cable img" class="img-fluid">
                 </a>
               </div>
               <div class="col-3">
@@ -75,7 +75,7 @@
             <div class = "row">
               <div class="col-3">
                 <a href ="yearlyRates">
-                  <img src="{{ url_for('static', filename='images/suicides_by_year.png') }}" alt="cable img" class="img-fluid">
+                  <img src="{{ url_for('static', filename='images/suicides_by_year.png') }}" alt="cable img" class="img-fluid" style="border: 2px solid #2E86C1;">
                 </a>
               </div>
               <div class="col-3">
@@ -103,33 +103,17 @@
       </div>
     </div>
   </div>
+  
 
   <div class="container">
-    <h3> Visualizations </h3>
+    <h3> Suicides per 100k Over Years </h3>
     <hr>
     <div class="row">
-      <div class="col-7" id="figure1">
-        
-        <form class="form-inline">
-          <div class="form-group mx-sm-3 mb-2">
-            <label for="selectYear" class="sr-only">Select Year</label>
-            <input type="text" class="form-control" id="inputYear" placeholder="1985">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Select</button>
-        </form>
-
-        <div id="pie_gender"></div>
+      <div class="col-7">
+          <div id="line_yearly"></div>
       </div>
       <div class="col-5">
-        <p class = "analysis">
-          Suicide is more common in men than women. Suicides in men are four times higher than in women. 
-          <br><br>The difference can be seen in the bar chart as well. The gap was small in the first four years, but the gap grew and remained stable after that. 
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div id="line_gender"></div>
+        <p class = "analysis"></p>
       </div>
     </div>
   </div>
@@ -149,6 +133,6 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <!--Plotly JS-->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="../static/js/gender_d3.js"></script>
+  <script src="../static/js/yearlyRates.js"></script>
 </body>
 </html>

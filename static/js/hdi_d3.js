@@ -24,13 +24,13 @@ d3.json('/api/suicides_and_hdi').then(function(data){
       }
       
     var layout = {
-        width: 450,
-        height: 350,
+        width: 600,
+        height: 600,
         xaxis: {
             title: 'Human Development Index'
         },
         yaxis: {
-            title: 'Suicides'
+            title: 'Suicides Per 100k'
         },
         title: 'Suicides vs HDI'
     }
