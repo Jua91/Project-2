@@ -76,32 +76,6 @@ $('.btn').click(function(){
 
 d3.json('/api/yearly_suicides_by_age').then(function(data){
     
-  // var year = [];
-  // var Age1 = [];
-  // var Age2 = [];
-  // var Age3 = [];
-  // var Age4 = [];
-  // var Age5 = [];
-  // var Age6 = [];
-  // Object.entries(data).forEach(function([key,value]){
-  //     year.push(key);
-  //     value.forEach(v=>{
-  //         if (v.age == "5-14 years"){
-  //           Age1.push(v.suicides);
-  //         } else if (v.age == "15-24 years"){
-  //           Age2.push(v.suicides);
-  //         } else if (v.age == "25-34 years"){
-  //           Age3.push(v.suicides);
-  //         } else if (v.age == "35-54 years"){
-  //           Age4.push(v.suicides);
-  //         } else if (v.age == "55-74 years"){
-  //           Age5.push(v.suicides);
-  //         }else {
-  //           Age6.push(v.suicides);
-  //         }
-  //     })
-  // })
-
   var year = [];
   var Age = [];
   Object.entries(data).forEach(function([key,value]){

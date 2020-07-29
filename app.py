@@ -69,13 +69,16 @@ def map():
 def suicides_by_country():
     # Create our session (link) from Python to the DB
     session = Session(engine)
-
     # results = session.query(Suicide.country).all()
-    results = engine.execute("SELECT country, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY country ORDER BY suicides DESC")
-    
+    results = engine.execute("SELECT c.iso_abr, s.country, s.suicides FROM countrydata c JOIN (SELECT country, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY country) s ON c.name = s.country;")
+    print(results)
     output = {}
     for result in results:
-        output[result['country']] = int(result['suicides'])
+        output[result['iso_abr']] = {
+            'suicides': int(result['suicides']),
+            'iso_abr': result['iso_abr'],
+            'country': result['country']
+        }
     session.close()
     return jsonify(output)
 
