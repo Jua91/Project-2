@@ -1,1 +1,1 @@
-web: gunicorn suiciderates.app:app
+web: gunicorn suiciderates:app
