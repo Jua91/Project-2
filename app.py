@@ -7,8 +7,11 @@ from operator import itemgetter
 
 from flask import Flask, jsonify, render_template
 
-password = "secu:0502"
-engine = create_engine(f'postgresql://postgres:{password}@localhost:5432/suicide_db')
+conn = 'postgres://fwemcimzozpoxb:2fb7f6660c9c464862e6af2b8b619cbb98ab310536ab502fd8d1c2fc455bfd11@ec2-3-208-50-226.compute-1.amazonaws.com:5432/dak9gr5mjopu5b'
+engine = create_engine(conn)
+
+# password = "secu:0502"
+# engine = create_engine(f'postgresql://postgres:{password}@localhost:5432/suicide_db')
 
 app = Flask(__name__)
 
