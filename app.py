@@ -113,23 +113,20 @@ def suicides_by_gender():
     session.close()
     return jsonify(output)
 
-@app.route("/api/yearly_suicides_by_gender")
-def yearly_suicides_by_gender():
+@app.route("/api/yearly_suicides_by_generation")
+def yearly_suicides_by_generation_test():
     # Create our session (link) from Python to the DB
     session = Session(engine)
-
     # results = session.query(Suicide.country).all()
-    results = engine.execute("SELECT year, sex, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY year,sex;")
-    
+    results = engine.execute("SELECT generation,year, sum(suicides_no) as numsuicides FROM suicidedata GROUP BY year, generation order by year")
     output = []
     for result in results:
         output.append({
             'year': result['year'],
-            'sex': result['sex'],
-            'suicides': int(result['suicides'])
+            'generation': result['generation'],
+            'numsuicides': int(result['numsuicides'])
         })
     session.close()
-
     yearly_results = {}
     # Sort the results by year
     sorted_output = sorted(output, key=itemgetter('year'))
