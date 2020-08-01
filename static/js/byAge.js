@@ -7,7 +7,7 @@ function plotBubble(labels, values,markerSize){
     y: values,
     mode: 'markers',
     marker: {
-      size: markerSize,
+      size: 40,
       color: values,
       colorscale: [
             ['0.0', 'rgb(165,0,38)'],
@@ -40,75 +40,39 @@ function plotBubble(labels, values,markerSize){
   Plotly.newPlot("bubble_age", data, layout, config);
 }
 
+// Plotting the default bubble plot
 d3.json('/api/suicides_by_age').then(function(data){
   console.log(data)
   var bubbleLabels = Object.keys(data)
   var bubbleValues = Object.values(data)  
   var bubbleSize = bubbleValues.map(x=>x/20000)
-  plotBubble(bubbleLabels,bubbleValues,bubbleSize)
+  plotBubble(bubbleLabels,bubbleValues)
 });
 
-// Add click event to plot the pie chart for the selected year
-$('.btn').click(function(){
-  event.preventDefault();
-  const year = $('#inputYear').val()
-  console.log("year ",year)
-
-  d3.json('/api/yearly_suicides_by_age').then(function(data){
-      console.log("yearly",data)
-      var selected_output
-      Object.entries(data).forEach(function([key,value]){
-          if (key==year){
-              selected_output = value
-          }
-      })
-      
-      var labels = []
-      var values = []
-      selected_output.forEach(output => {
-          labels.push(output.age)
-          values.push(output.suicides)
-      })
-      var markerSize = values.map(x=>x/500)
-      plotBubble(labels, values, markerSize)
+// Adding country names to the select options
+d3.json('/api/suicides_by_age_country').then(function(data){
+  Object.entries(data).forEach(function([key,value]){
+    var option = "<option value='" + key + "'>" + key + "</option>";
+    $("#selectCountry").append(option);
   })
 })
 
-d3.json('/api/yearly_suicides_by_age').then(function(data){
-    
-  var year = [];
-  var Age = [];
-  Object.entries(data).forEach(function([key,value]){
-      year.push(key);
-      value.forEach(v=>{
-          if (v.age == "35-54 years"){
-            Age.push(v.suicides);
-          } 
+// Add click event to plot the pie chart for the selected year
+$('#selectCountry').change(function(){
+  event.preventDefault();
+  const country = $(':selected').val()
+  console.log("country ",country)
+
+  d3.json('/api/suicides_by_age_country').then(function(data){
+      var selected_output = Object.entries(data).filter(([key,value])=> key==country)
+
+      console.log("selected",selected_output[0][1])
+      var labels = []
+      var values = []
+      selected_output[0][1].forEach(output => {
+          labels.push(output.age)
+          values.push(output.suicides)
       })
+      plotBubble(labels, values)
   })
-  var data = [
-    {
-      type: 'bar',
-      x: year,
-      y: Age,
-      marker:{
-        color: '#FF7F50'
-      }
-    },
-  ];
-  var layout = {
-      title: "Suicides for Age '35-54 Years'",
-      autosize: false,
-      width: 800,
-      height: 500,
-      margin: {
-        l: 150,
-        r: 50,
-        b: 100,
-        t: 100,
-        pad: 4
-      }
-  }
-  var config = {responsive: true}
-  Plotly.newPlot('bubble_certainAgeGroup', data, layout, config);
 })

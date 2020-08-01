@@ -113,6 +113,31 @@ def suicides_by_gender():
     session.close()
     return jsonify(output)
 
+@app.route("/api/yearly_suicides_by_gender")
+def yearly_suicides_by_gender():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    # results = session.query(Suicide.country).all()
+    results = engine.execute("SELECT year, sex, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY year,sex;")
+    
+    output = []
+    for result in results:
+        output.append({
+            'year': result['year'],
+            'sex': result['sex'],
+            'suicides': int(result['suicides'])
+        })
+    session.close()
+
+    yearly_results = {}
+    # Sort the results by year
+    sorted_output = sorted(output, key=itemgetter('year'))
+    # Assigning the objects into the same list for the same year data
+    for key, group in itertools.groupby(sorted_output, key=lambda x:x['year']):
+        yearly_results[key] = list(group)
+    return jsonify(yearly_results)
+
 @app.route("/api/yearly_suicides_by_generation")
 def yearly_suicides_by_generation_test():
     # Create our session (link) from Python to the DB
@@ -164,30 +189,53 @@ def suicides_by_age():
     session.close()
     return jsonify(output)
 
-@app.route("/api/yearly_suicides_by_age")
-def yearly_suicides_by_age():
+# @app.route("/api/yearly_suicides_by_age")
+# def yearly_suicides_by_age():
+#     # Create our session (link) from Python to the DB
+#     session = Session(engine)
+
+#     # results = session.query(Suicide.country).all()
+#     results = engine.execute("SELECT year, age, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY year,age;")
+    
+#     output = []
+#     for result in results:
+#         output.append({
+#             'year': result['year'],
+#             'age': result['age'],
+#             'suicides': int(result['suicides'])
+#         })
+#     session.close()
+
+#     yearly_results = {}
+#     # Sort the results by year
+#     sorted_output = sorted(output, key=itemgetter('year'))
+#     # Assigning the objects into the same list for the same year data
+#     for key, group in itertools.groupby(sorted_output, key=lambda x:x['year']):
+#         yearly_results[key] = list(group)
+#     return jsonify(yearly_results)
+
+@app.route('/api/suicides_by_age_country')
+def suicides_by_age_country():
     # Create our session (link) from Python to the DB
     session = Session(engine)
-
     # results = session.query(Suicide.country).all()
-    results = engine.execute("SELECT year, age, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY year,age;")
-    
+    results = engine.execute('SELECT age, country, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY age, country ORDER BY suicides')
+    print(results)
     output = []
     for result in results:
         output.append({
-            'year': result['year'],
+            'country': result['country'],
             'age': result['age'],
             'suicides': int(result['suicides'])
         })
     session.close()
-
-    yearly_results = {}
+    country_results = {}
     # Sort the results by year
-    sorted_output = sorted(output, key=itemgetter('year'))
+    sorted_output = sorted(output, key=itemgetter('country'))
     # Assigning the objects into the same list for the same year data
-    for key, group in itertools.groupby(sorted_output, key=lambda x:x['year']):
-        yearly_results[key] = list(group)
-    return jsonify(yearly_results)
+    for key, group in itertools.groupby(sorted_output, key=lambda x:x['country']):
+        country_results[key] = list(group)
+    return jsonify(country_results)
 
 @app.route("/api/suicides_and_gdp")
 def suicides_and_gdp():

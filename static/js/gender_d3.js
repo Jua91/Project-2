@@ -62,6 +62,7 @@ d3.json('/api/yearly_suicides_by_gender').then(function(data){
             }
         })
     })
+    
     var trace1 = {
         x: year,
         y: male,
