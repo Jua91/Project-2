@@ -1,7 +1,5 @@
-// Suicides by Age
 
-function plotBubble(labels, values,markerSize){
-
+function plotBubble(labels, values){
   var trace1 = {
     x: labels,
     y: values,
@@ -21,7 +19,7 @@ function plotBubble(labels, values,markerSize){
             ['0.888888888889', 'rgb(69,117,180)'],
             ['1.0', 'rgb(49,54,149)']
           ],
-    }  
+    }
   }
   var data = [trace1];
   var layout = {
@@ -36,19 +34,16 @@ function plotBubble(labels, values,markerSize){
       title: 'Suicides by Age'
   }
   var config = {responsive: true}
-
   Plotly.newPlot("bubble_age", data, layout, config);
 }
-
 // Plotting the default bubble plot
 d3.json('/api/suicides_by_age').then(function(data){
   console.log(data)
   var bubbleLabels = Object.keys(data)
-  var bubbleValues = Object.values(data)  
-  var bubbleSize = bubbleValues.map(x=>x/20000)
+  var bubbleValues = Object.values(data)
+  // var bubbleSize = bubbleValues.map(x=>x/20000)
   plotBubble(bubbleLabels,bubbleValues)
 });
-
 // Adding country names to the select options
 d3.json('/api/suicides_by_age_country').then(function(data){
   Object.entries(data).forEach(function([key,value]){
@@ -57,22 +52,21 @@ d3.json('/api/suicides_by_age_country').then(function(data){
   })
 })
 
-// Add click event to plot the pie chart for the selected year
-$('#selectCountry').change(function(){
-  event.preventDefault();
-  const country = $(':selected').val()
-  console.log("country ",country)
-
-  d3.json('/api/suicides_by_age_country').then(function(data){
-      var selected_output = Object.entries(data).filter(([key,value])=> key==country)
-
-      console.log("selected",selected_output[0][1])
-      var labels = []
-      var values = []
-      selected_output[0][1].forEach(output => {
-          labels.push(output.age)
-          values.push(output.suicides)
-      })
-      plotBubble(labels, values)
+$(document).ready(function(){
+  $('#selectCountry').change(function(){
+    event.preventDefault();
+    const country = $(':selected').val()
+    console.log("country",country)
+    d3.json('/api/suicides_by_age_country').then(function(data){
+        var selected_output = Object.entries(data).filter(([key,value])=> key==country)
+        console.log('selected',selected_output[0][1])
+        var labels = []
+        var values = []
+        selected_output[0][1].forEach(output => {
+            labels.push(output.age)
+            values.push(output.suicides)
+        })
+        plotBubble(labels, values)
+    })
   })
 })
