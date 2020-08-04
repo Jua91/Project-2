@@ -48,7 +48,7 @@ function loadPie() {
 }
 
 $(document).ready(function () {
-    for (var i = 1997; i < 2017; ++i) {
+    for (var i = 1985; i < 2017; ++i) {
         var option = "<option value='" + i + "'>" + i + "</option>";
         $("#selectYear").append(option);
     }
