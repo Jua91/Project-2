@@ -43,3 +43,6 @@ GROUP BY year;
 SELECT country,AVG(suicidesper100pop) AS suicides, MAX(hdi_for_year) AS hdi FROM suicidedata WHERE hdi_for_year <>0 GROUP BY country,year;
 -- Average (of yearly) suicide rates and hdi by country
 SELECT country, AVG(derivedtable.suicide_rates) AS avg_suicide_rates, AVG(derivedTable.hdi) AS hdi FROM (SELECT year, country, SUM(suicidesper100pop) AS suicide_rates, MAX(hdi_for_year) AS hdi FROM suicidedata WHERE hdi_for_year <>0 GROUP BY year, country ORDER BY year) AS derivedTable GROUP BY country ;
+
+-- total suicides by age, country, and year
+SELECT year,age, country, SUM(suicides_no) AS suicides FROM suicidedata GROUP BY age, country,year ORDER BY year;
